@@ -1,0 +1,1174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hiba Kakul — Platform PM</title>
+  <style>
+    :root {
+      --ink-dark: #0a0e27;
+      --ink-lighter: #1a1f3a;
+      --ink-border: #2a3050;
+      --text-primary: #f5f7fa;
+      --text-secondary: #b8bcc8;
+      --text-muted: #8a91a8;
+      --accent-cyan: #06d6d6;
+      --accent-purple: #9d7eff;
+      --accent-gold: #d4af37;
+      --accent-teal: #17b8a0;
+      --bg-hover: rgba(6, 214, 214, 0.05);
+      --border-subtle: rgba(106, 114, 140, 0.3);
+    }
+
+    @media (prefers-color-scheme: light) {
+      :root:not([data-theme="dark"]) {
+        --ink-dark: #ffffff;
+        --ink-lighter: #f9f9fb;
+        --ink-border: #e8ecf3;
+        --text-primary: #1a1f38;
+        --text-secondary: #6a7280;
+        --text-muted: #9ca3af;
+        --bg-hover: rgba(6, 214, 214, 0.08);
+        --border-subtle: rgba(229, 231, 235, 0.8);
+      }
+    }
+
+    :root[data-theme="light"] {
+      --ink-dark: #ffffff;
+      --ink-lighter: #f9f9fb;
+      --ink-border: #e8ecf3;
+      --text-primary: #1a1f38;
+      --text-secondary: #6a7280;
+      --text-muted: #9ca3af;
+      --bg-hover: rgba(6, 214, 214, 0.08);
+      --border-subtle: rgba(229, 231, 235, 0.8);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: var(--ink-dark);
+      color: var(--text-primary);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      font-size: 15px;
+      line-height: 1.6;
+      letter-spacing: -0.3px;
+    }
+
+    a {
+      color: var(--accent-cyan);
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+
+    a:hover {
+      color: var(--accent-teal);
+    }
+
+    .container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 2.5rem;
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        padding: 0 1.5rem;
+      }
+    }
+
+    /* Header */
+    header {
+      padding: 2.5rem 0;
+      background: linear-gradient(180deg, var(--ink-lighter) 0%, transparent 100%);
+      border-bottom: 1px solid var(--border-subtle);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(8px);
+    }
+
+    .header-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+      align-items: flex-start;
+    }
+
+    .logo-name {
+      font-size: clamp(2.5rem, 8vw, 4rem);
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      line-height: 1.15;
+    }
+
+    .logo-meta {
+      font-size: 0.65rem;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    nav {
+      display: flex;
+      gap: 3rem;
+      align-items: center;
+    }
+
+    nav button {
+      background: none;
+      border: none;
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+      padding-bottom: 0.25rem;
+    }
+
+    nav button:hover {
+      color: var(--accent-cyan);
+    }
+
+    nav button::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      width: 0;
+      height: 1.5px;
+      background: var(--accent-cyan);
+      transition: width 0.3s ease;
+    }
+
+    nav button:hover::after {
+      width: 100%;
+    }
+
+    .theme-toggle {
+      width: 44px;
+      height: 24px;
+      background: var(--ink-border);
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      cursor: pointer;
+      position: relative;
+      transition: all 0.3s ease;
+    }
+
+    .theme-toggle::after {
+      content: '☀️';
+      position: absolute;
+      left: 4px;
+      top: 2px;
+      font-size: 14px;
+      transition: all 0.3s ease;
+    }
+
+    .theme-toggle.dark::after {
+      content: '🌙';
+      left: 22px;
+    }
+
+    /* Hero */
+    .hero {
+      padding: 8rem 0 6rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -40%;
+      right: -15%;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(6, 214, 214, 0.08) 0%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    .hero::after {
+      content: '';
+      position: absolute;
+      bottom: -30%;
+      left: -10%;
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, rgba(157, 126, 255, 0.06) 0%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      max-width: 800px;
+    }
+
+    .hero-overline {
+      font-size: 0.85rem;
+      color: var(--accent-teal);
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 1.5rem;
+      opacity: 0;
+      animation: fadeInUp 0.6s ease 0.2s forwards;
+    }
+
+    h1 {
+      font-size: clamp(2.5rem, 8vw, 4rem);
+      font-weight: 700;
+      line-height: 1.15;
+      margin-bottom: 1.5rem;
+      opacity: 0;
+      animation: fadeInUp 0.6s ease 0.3s forwards;
+    }
+
+    .hero-subtitle {
+      font-size: 1.25rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      margin-bottom: 2.5rem;
+      opacity: 0;
+      animation: fadeInUp 0.6s ease 0.4s forwards;
+    }
+
+    .cta-group {
+      display: flex;
+      gap: 1.5rem;
+      opacity: 0;
+      animation: fadeInUp 0.6s ease 0.5s forwards;
+    }
+
+    .cta-primary {
+      padding: 0.9rem 2.2rem;
+      background: linear-gradient(135deg, var(--accent-cyan), var(--accent-teal));
+      color: var(--ink-dark);
+      border: none;
+      border-radius: 6px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 10px 30px rgba(6, 214, 214, 0.15);
+    }
+
+    .cta-primary:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 15px 40px rgba(6, 214, 214, 0.25);
+    }
+
+    .cta-secondary {
+      padding: 0.9rem 2.2rem;
+      background: transparent;
+      color: var(--accent-cyan);
+      border: 1.5px solid var(--accent-cyan);
+      border-radius: 6px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .cta-secondary:hover {
+      background: var(--bg-hover);
+      transform: translateY(-3px);
+    }
+
+    /* Stats */
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 2rem;
+      margin: 5rem 0 0 0;
+      opacity: 0;
+      animation: fadeInUp 0.6s ease 0.6s forwards;
+    }
+
+    .stat-item {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .stat-value {
+      font-size: 2rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--accent-cyan), var(--accent-gold));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .stat-label {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-weight: 600;
+    }
+
+    /* Case Studies Section */
+    .section {
+      padding: 7rem 0;
+      border-top: 1px solid var(--border-subtle);
+      position: relative;
+    }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 4rem;
+    }
+
+    .section-header h2 {
+      font-size: 2.2rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+    }
+
+    .section-header p {
+      font-size: 1.05rem;
+      color: var(--text-secondary);
+      max-width: 500px;
+      margin: 0 auto;
+    }
+
+    .case-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+      gap: 2.5rem;
+    }
+
+    .case-card {
+      background: linear-gradient(135deg, var(--ink-lighter) 0%, var(--ink-lighter) 100%);
+      border: 1px solid var(--border-subtle);
+      border-radius: 8px;
+      padding: 2.5rem;
+      cursor: pointer;
+      transition: all 0.4s cubic-bezier(0.23, 1, 0.320, 1);
+      position: relative;
+      overflow: hidden;
+      opacity: 0;
+      animation: fadeInUp 0.6s ease forwards;
+    }
+
+    .case-card:nth-child(1) { animation-delay: 0.1s; }
+    .case-card:nth-child(2) { animation-delay: 0.2s; }
+    .case-card:nth-child(3) { animation-delay: 0.3s; }
+    .case-card:nth-child(4) { animation-delay: 0.4s; }
+    .case-card:nth-child(5) { animation-delay: 0.5s; }
+
+    .case-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--accent-cyan), transparent);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .case-card:hover {
+      background: linear-gradient(135deg, var(--ink-border) 0%, var(--ink-lighter) 100%);
+      border-color: var(--accent-cyan);
+      transform: translateY(-6px);
+      box-shadow: 0 20px 50px rgba(6, 214, 214, 0.1);
+    }
+
+    .case-card:hover::before {
+      opacity: 1;
+    }
+
+    .case-tag {
+      display: inline-block;
+      padding: 0.35rem 0.75rem;
+      background: rgba(6, 214, 214, 0.1);
+      color: var(--accent-cyan);
+      border-radius: 4px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 1.2rem;
+      border: 1px solid rgba(6, 214, 214, 0.2);
+    }
+
+    .case-title {
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      color: var(--text-primary);
+    }
+
+    .case-constraint {
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+      line-height: 1.65;
+      margin-bottom: 1.3rem;
+      border-left: 2px solid var(--accent-purple);
+      padding-left: 1rem;
+    }
+
+    .case-metrics {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.7rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .metric-tag {
+      padding: 0.4rem 0.85rem;
+      background: rgba(157, 126, 255, 0.1);
+      border: 1px solid rgba(157, 126, 255, 0.25);
+      color: var(--accent-purple);
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    .case-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      color: var(--accent-cyan);
+      font-weight: 600;
+      font-size: 0.95rem;
+      transition: all 0.3s ease;
+    }
+
+    .case-cta:hover {
+      gap: 1rem;
+    }
+
+    /* About Section */
+    .about-section {
+      padding: 7rem 0;
+      border-top: 1px solid var(--border-subtle);
+    }
+
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5rem;
+      align-items: start;
+    }
+
+    @media (max-width: 768px) {
+      .about-grid {
+        grid-template-columns: 1fr;
+        gap: 3rem;
+      }
+    }
+
+    .about-text h2 {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 1.5rem;
+    }
+
+    .about-text p {
+      color: var(--text-secondary);
+      line-height: 1.75;
+      margin-bottom: 1.5rem;
+    }
+
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+
+    .skill-badge {
+      padding: 0.7rem 1.1rem;
+      background: rgba(6, 214, 214, 0.08);
+      border: 1px solid rgba(6, 214, 214, 0.25);
+      border-radius: 4px;
+      color: var(--text-secondary);
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+
+    .skill-badge:hover {
+      background: rgba(6, 214, 214, 0.15);
+      color: var(--accent-cyan);
+      border-color: var(--accent-cyan);
+    }
+
+    .resume-preview {
+      background: var(--ink-lighter);
+      border: 1px solid var(--border-subtle);
+      border-radius: 8px;
+      padding: 2.5rem;
+    }
+
+    .resume-preview h3 {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 2rem;
+      color: var(--accent-cyan);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .resume-item {
+      margin-bottom: 2rem;
+      padding-bottom: 2rem;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .resume-item:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .resume-role {
+      font-weight: 700;
+      color: var(--text-primary);
+      font-size: 0.95rem;
+      margin-bottom: 0.3rem;
+    }
+
+    .resume-meta {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    /* Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(10, 14, 39, 0.8);
+      backdrop-filter: blur(4px);
+      z-index: 1000;
+      overflow-y: auto;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .modal.active {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-content {
+      background: var(--ink-lighter);
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      padding: 3rem;
+      max-width: 700px;
+      width: 90%;
+      position: relative;
+      animation: slideUp 0.4s ease;
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 1.5rem;
+      right: 1.5rem;
+      background: none;
+      border: none;
+      font-size: 2rem;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .modal-close:hover {
+      color: var(--accent-cyan);
+      transform: rotate(90deg);
+    }
+
+    .modal h2 {
+      font-size: 1.8rem;
+      margin-bottom: 2rem;
+      color: var(--text-primary);
+    }
+
+    .modal-section {
+      margin-bottom: 2rem;
+    }
+
+    .modal-section h4 {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--accent-cyan);
+      margin-bottom: 1rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .modal-section p {
+      color: var(--text-secondary);
+      line-height: 1.75;
+      margin-bottom: 1rem;
+    }
+
+    .modal-section ul {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .modal-section li {
+      color: var(--text-secondary);
+      line-height: 1.75;
+      margin-bottom: 0.75rem;
+      padding-left: 1.5rem;
+      position: relative;
+    }
+
+    .modal-section li::before {
+      content: '→';
+      position: absolute;
+      left: 0;
+      color: var(--accent-teal);
+      font-weight: bold;
+    }
+
+    /* Footer */
+    footer {
+      border-top: 1px solid var(--border-subtle);
+      padding: 5rem 0;
+      background: linear-gradient(180deg, transparent 0%, var(--ink-lighter) 100%);
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 3rem;
+      margin-bottom: 3rem;
+    }
+
+    .footer-section h4 {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--accent-cyan);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 1.5rem;
+    }
+
+    .footer-section ul {
+      list-style: none;
+    }
+
+    .footer-section li {
+      margin-bottom: 0.8rem;
+    }
+
+    .footer-section a {
+      color: var(--text-secondary);
+      transition: all 0.3s ease;
+    }
+
+    .footer-section a:hover {
+      color: var(--accent-cyan);
+    }
+
+    .footer-bottom {
+      border-top: 1px solid var(--border-subtle);
+      padding-top: 2rem;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+    }
+
+    /* Animations */
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (max-width: 768px) {
+      h1 { font-size: 2rem; }
+      .hero { padding: 5rem 0 3rem; }
+      nav { gap: 2rem; }
+      .cta-group { flex-direction: column; width: 100%; }
+      .cta-primary, .cta-secondary { width: 100%; }
+      .modal-content { padding: 2rem; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header>
+    <div class="container">
+      <div class="header-inner">
+        <div class="logo">
+          <div class="logo-name">Hiba Kakul</div>
+          <div class="logo-meta">hibakakul@gmail.com • New Delhi, India</div>
+        </div>
+        <nav>
+          <button onclick="smoothScroll('cases')">Work</button>
+          <button onclick="smoothScroll('about')">About</button>
+          <button onclick="smoothScroll('contact')">Contact</button>
+          <div class="theme-toggle" onclick="toggleTheme()"></div>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero-content">
+        <div class="hero-overline">Platform Product Manager</div>
+        <h1>I diagnose bottlenecks. I design platforms. I scale operations.</h1>
+        <p class="hero-subtitle">
+          0-to-1 platform builder. Scaled operations for 250+ enterprise partners across India, West Asia and East Asia. Moved from reactive support to proactive product strategy through structured problem translation.
+        </p>
+        <div class="cta-group">
+          <button class="cta-primary" onclick="smoothScroll('cases')">Explore Work</button>
+          <button class="cta-secondary" onclick="window.open('https://linkedin.com/in/hibakakul', '_blank')">Connect</button>
+        </div>
+        <div class="stats">
+          <div class="stat-item">
+            <div class="stat-value">250+</div>
+            <div class="stat-label">Enterprise Partners</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-value">6+</div>
+            <div class="stat-label">Years Building</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-value">3 Regions</div>
+            <div class="stat-label">India, West, East Asia</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Case Studies -->
+  <section class="section" id="cases">
+    <div class="container">
+      <div class="section-header">
+        <h2>Selected Product Enablements</h2>
+        <p>
+          Five major platforms. Each solved a real constraint at infrastructure level.
+        </p>
+      </div>
+
+      <div class="case-grid">
+        <!-- Case 1: Sugar Cosmetics Omni-Channel -->
+        <div class="case-card" onclick="openModal(1)">
+          <div class="case-tag">Infrastructure</div>
+          <div class="case-title">Unified Omni-Channel Data Integration</div>
+          <div class="case-constraint">
+            Sugar Cosmetics needed real-time inventory and order visibility across 100+ retail stores with no unified data pipeline.
+          </div>
+          <div class="case-metrics">
+            <div class="metric-tag">Real-time Sync</div>
+            <div class="metric-tag">100+ Stores</div>
+            <div class="metric-tag">35% Reduction in Stockouts</div>
+          </div>
+          <div class="case-cta">Deep Dive <span>→</span></div>
+        </div>
+
+        <!-- Case 2: Amazon B2B -->
+        <div class="case-card" onclick="openModal(2)">
+          <div class="case-tag">Integration</div>
+          <div class="case-title">Amazon B2B Order Integration</div>
+          <div class="case-constraint">
+            Manual order reconciliation across 250+ enterprise brands created operational inefficiency and error risk with no reliable sync.
+          </div>
+          <div class="case-metrics">
+            <div class="metric-tag">250+ Brands</div>
+            <div class="metric-tag">Zero Manual Work</div>
+            <div class="metric-tag">Seamless Order Processing</div>
+          </div>
+          <div class="case-cta">Deep Dive <span>→</span></div>
+        </div>
+
+        <!-- Case 3: Ajio GST Compliance -->
+        <div class="case-card" onclick="openModal(3)">
+          <div class="case-tag">Compliance</div>
+          <div class="case-title">Ajio B2B2C GST Compliance Remediation</div>
+          <div class="case-constraint">
+            Ajio's B2B2C model required two separate invoice chains. Existing integration mixed them, creating GST-invalid invoices across 50+ brands.
+          </div>
+          <div class="case-metrics">
+            <div class="metric-tag">50+ Brands</div>
+            <div class="metric-tag">5000+ Historical Invoices Corrected</div>
+            <div class="metric-tag">Zero Violations</div>
+          </div>
+          <div class="case-cta">Deep Dive <span>→</span></div>
+        </div>
+
+        <!-- Case 4: Filtrd -->
+        <div class="case-card" onclick="openModal(4)">
+          <div class="case-tag">Fintech</div>
+          <div class="case-title">Filtrd: Ethical Investment Platform</div>
+          <div class="case-constraint">
+            Women investors lacked accessible ethical investment education and Shariah-compliant options. No aggregated financial data layer existed.
+          </div>
+          <div class="case-metrics">
+            <div class="metric-tag">API Infrastructure</div>
+            <div class="metric-tag">Community Architecture</div>
+            <div class="metric-tag">Financial Literacy Workflows</div>
+          </div>
+          <div class="case-cta">Deep Dive <span>→</span></div>
+        </div>
+
+        <!-- Case 5: Sab Link -->
+        <div class="case-card" onclick="openModal(5)">
+          <div class="case-tag">Creator Platform</div>
+          <div class="case-title">Sab Link: Artisan-to-Market Platform</div>
+          <div class="case-constraint">
+            20+ artisans from marginalized communities had no unified access to market visibility or direct-to-consumer channels. Skill-sharing and community visibility were fragmented.
+          </div>
+          <div class="case-metrics">
+            <div class="metric-tag">20+ Artisans</div>
+            <div class="metric-tag">Skill-Based Entrepreneurship</div>
+            <div class="metric-tag">Community-Led Growth</div>
+          </div>
+          <div class="case-cta">Deep Dive <span>→</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- About Section -->
+  <section class="about-section" id="about">
+    <div class="container">
+      <div class="about-grid">
+        <div>
+          <h2>Who I Am</h2>
+          <p>
+            Platform PM with 6+ years building at infrastructure level. I've worked across order management, inventory, compliance, fintech, and creator economics.
+          </p>
+          <p>
+            My approach: diagnose the constraint at platform level (fragmented data, no automation, missing visibility), design the architecture (what can be built?), then drive adoption (how do we make it stick?).
+          </p>
+          <p>
+            Started as operations lead at Rivigo. Moved into product at Unicommerce, working from Consultant through Senior Consultant to Team Lead across 250+ enterprise accounts. Currently building Filtrd's backend infrastructure and community architecture, while scaling Sab Link's artisan-to-market platform.
+          </p>
+          <div class="skills-grid">
+            <div class="skill-badge">Platform Strategy</div>
+            <div class="skill-badge">API Architecture</div>
+            <div class="skill-badge">Stakeholder Mapping</div>
+            <div class="skill-badge">Data Pipelines</div>
+            <div class="skill-badge">SQL</div>
+            <div class="skill-badge">Adoption Frameworks</div>
+            <div class="skill-badge">Cross-Regional Scaling</div>
+            <div class="skill-badge">0-to-1 Product</div>
+          </div>
+        </div>
+
+        <div class="resume-preview">
+          <h3>Experience</h3>
+          <div class="resume-item">
+            <div class="resume-role">Platform Lead</div>
+            <div class="resume-meta">Filtrd (2025 to present)</div>
+          </div>
+          <div class="resume-item">
+            <div class="resume-role">Team Lead, Products Solutioning</div>
+            <div class="resume-meta">Unicommerce (Mar 2023 to May 2024)</div>
+          </div>
+          <div class="resume-item">
+            <div class="resume-role">Senior Consultant, Product Solutioning</div>
+            <div class="resume-meta">Unicommerce (Mar 2022 to Mar 2023)</div>
+          </div>
+          <div class="resume-item">
+            <div class="resume-role">Consultant, Product Solutioning</div>
+            <div class="resume-meta">Unicommerce (May 2021 to Mar 2022)</div>
+          </div>
+          <div class="resume-item">
+            <div class="resume-role">Service Manager</div>
+            <div class="resume-meta">Rivigo (Sep 2018 to May 2021)</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer id="contact">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-section">
+          <h4>Connect</h4>
+          <ul>
+            <li><a href="https://linkedin.com/in/hibakakul" target="_blank">LinkedIn</a></li>
+            <li><a href="https://github.com/hibakakul-hash" target="_blank">GitHub</a></li>
+            <li><a href="mailto:hibakakul@gmail.com">Email</a></li>
+          </ul>
+        </div>
+        <div class="footer-section">
+          <h4>Projects</h4>
+          <ul>
+            <li><a href="https://sab-link.vercel.app" target="_blank">Sab Link</a></li>
+            <li><a href="https://filtrd.io" target="_blank">Filtrd</a></li>
+          </ul>
+        </div>
+        <div class="footer-section">
+          <h4>Focus</h4>
+          <ul>
+            <li>Platform Architecture</li>
+            <li>Infrastructure Thinking</li>
+            <li>Multi-Stakeholder Systems</li>
+            <li>Adoption at Scale</li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2026 Hiba Kakul. Constraint is just unexamined leverage.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Modals -->
+  <div class="modal" id="modal1">
+    <div class="modal-content">
+      <button class="modal-close" onclick="closeModal(1)">×</button>
+      <h2>Unified Omni-Channel Data Integration</h2>
+
+      <div class="modal-section">
+        <h4>The Problem</h4>
+        <p>Sugar Cosmetics operated across 100+ retail stores with siloed inventory and order data. Real-time visibility was impossible, leading to overselling, stockouts, and fragmented customer experiences.</p>
+      </div>
+
+      <div class="modal-section">
+        <h4>Design and Delivery</h4>
+        <p>Assessed existing API capabilities across retail, e-commerce, and POS systems. Designed a webhook-based integration architecture for real-time inventory and order data sync. Coordinated technical requirements directly with the client's product team and validated the design through a staging pilot before go-live.</p>
+      </div>
+
+      <div class="modal-section">
+        <h4>Impact</h4>
+        <ul>
+          <li>Scaled to 100+ stores across India with unified real-time inventory visibility</li>
+          <li>Reduced stockouts 35% through data-driven replenishment</li>
+          <li>Eliminated manual reconciliation (80% fewer touchpoints)</li>
+          <li>Freed ops teams for strategic work instead of firefighting</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal" id="modal2">
+    <div class="modal-content">
+      <button class="modal-close" onclick="closeModal(2)">×</button>
+      <h2>Amazon B2B Order Integration</h2>
+
+      <div class="modal-section">
+        <h4>The Problem</h4>
+        <p>Manual order reconciliation across 250+ enterprise brands' Amazon B2B channels created operational inefficiency and error risk. No reliable sync existed between Amazon and Unicommerce.</p>
+      </div>
+
+      <div class="modal-section">
+        <h4>Design and Delivery</h4>
+        <p>Identified the problem and built the business case. Engaged directly with Amazon's team to scope available integration options. Partnered with engineering and leadership through solution design, recommending a polling-based sync model chosen based on Amazon's webhook limitations at the time.</p>
+      </div>
+
+      <div class="modal-section">
+        <h4>Impact</h4>
+        <ul>
+          <li>Eliminated manual reconciliation across 250+ brands</li>
+          <li>Enabled seamless, scaled order processing</li>
+          <li>Reduced operational risk and human error</li>
+          <li>Freed finance and ops teams from routine reconciliation work</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal" id="modal3">
+    <div class="modal-content">
+      <button class="modal-close" onclick="closeModal(3)">×</button>
+      <h2>Ajio B2B2C GST Compliance Remediation</h2>
+
+      <div class="modal-section">
+        <h4>The Problem</h4>
+        <p>Ajio's B2B2C model required two separate invoice chains. The existing integration mixed them, producing GST-invalid invoices. A client's CA flagged the mismatches, escalating to a compliance risk across 50+ brands.</p>
+      </div>
+
+      <div class="modal-section">
+        <h4>Design and Delivery</h4>
+        <p>Built the business case for remediation. Engaged Ajio's technical team directly to define the corrected invoicing approach. Partnered with engineering and business through the revamp, holding sign-off before rollout. Retrospectively corrected 5,000+ historical invoices with zero operational disruption.</p>
+      </div>
+
+      <div class="modal-section">
+        <h4>Impact</h4>
+        <ul>
+          <li>Achieved 100% invoice validity post-launch</li>
+          <li>Retrospectively corrected 5,000+ historical invoices with zero disruption</li>
+          <li>Eliminated manual review, freed finance team</li>
+          <li>Reduced invoice-to-dispatch from 4 hours to 8 minutes</li>
+          <li>Scaled confidently across 50+ brands; zero compliance violations as transaction volume grew 3x</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal" id="modal4">
+    <div class="modal-content">
+      <button class="modal-close" onclick="closeModal(4)">×</button>
+      <h2>Filtrd: Ethical Investment Platform</h2>
+
+      <div class="modal-section">
+        <h4>The Problem</h4>
+        <p>Women investors faced barriers: lack of accessible ethical investment education, limited Shariah-compliant options, and no aggregated financial data layer for third-party integration.</p>
+      </div>
+
+      <div class="modal-section">
+        <h4>Design and Delivery</h4>
+        <p>Translated market research (women's wealth gaps, Shariah-compliance constraints, investor sentiment) into a 0-to-1 roadmap. Built API layer enabling third-party financial data integration. Designed pricing model and community workshop framework connecting financial literacy to product adoption.</p>
+      </div>
+
+      <div class="modal-section">
+        <h4>Impact</h4>
+        <ul>
+          <li>Designed backend infrastructure for scaled financial data integration</li>
+          <li>Built community engagement architecture connecting education to adoption</li>
+          <li>Established framework for workshop led financial literacy</li>
+          <li>Creating infrastructure for ethical investing at scale</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal" id="modal5">
+    <div class="modal-content">
+      <button class="modal-close" onclick="closeModal(5)">×</button>
+      <h2>Sab Link: Artisan-to-Market Platform</h2>
+
+      <div class="modal-section">
+        <h4>The Problem</h4>
+        <p>20+ artisans from marginalized communities had no unified platform for market access. Skill-sharing channels were fragmented. Artists had no aggregated visibility and faced barriers to direct-to-consumer sales.</p>
+      </div>
+
+      <div class="modal-section">
+        <h4>Design and Delivery</h4>
+        <p>Diagnosed the platform-level constraint: artisans needed both community visibility and market access. Designed a two-layer model combining skill-based workshops with a direct-to-consumer marketplace. Built the community layer first (monthly in-person skill-sharing workshops), then layered the digital platform enabling direct transactions and artist portfolios.</p>
+      </div>
+
+      <div class="modal-section">
+        <h4>Impact</h4>
+        <ul>
+          <li>Connected 20+ artisan-businesses to market access and visibility</li>
+          <li>Built skill-based entrepreneurship framework for scaling</li>
+          <li>Created community-led model reducing reliance on single founder</li>
+          <li>Established sustainable pathway for minority group economic growth</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function toggleTheme() {
+      const toggle = document.querySelector('.theme-toggle');
+      const root = document.documentElement;
+
+      if (toggle.classList.contains('dark')) {
+        toggle.classList.remove('dark');
+        root.removeAttribute('data-theme');
+        localStorage.setItem('theme', 'system');
+      } else {
+        toggle.classList.add('dark');
+        root.setAttribute('data-theme', 'dark');
+        localStorage.setItem('theme', 'dark');
+      }
+    }
+
+    function openModal(caseNum) {
+      const modal = document.getElementById('modal' + caseNum);
+      if (modal) {
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+      }
+    }
+
+    function closeModal(caseNum) {
+      const modal = document.getElementById('modal' + caseNum);
+      if (modal) {
+        modal.classList.remove('active');
+        document.body.style.overflow = 'auto';
+      }
+    }
+
+    function smoothScroll(sectionId) {
+      const section = document.getElementById(sectionId);
+      if (section) {
+        section.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+
+    document.querySelectorAll('.modal').forEach(modal => {
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+          const caseNum = modal.id.replace('modal', '');
+          closeModal(caseNum);
+        }
+      });
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        document.querySelectorAll('.modal.active').forEach(modal => {
+          const caseNum = modal.id.replace('modal', '');
+          closeModal(caseNum);
+        });
+      }
+    });
+
+    window.addEventListener('DOMContentLoaded', () => {
+      const savedTheme = localStorage.getItem('theme');
+      const toggle = document.querySelector('.theme-toggle');
+
+      if (savedTheme === 'dark') {
+        toggle.classList.add('dark');
+        document.documentElement.setAttribute('data-theme', 'dark');
+      }
+    });
+  </script>
+</body>
+</html>
