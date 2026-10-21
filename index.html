@@ -354,6 +354,65 @@
   .modal-section ul { list-style: none; }
   .modal-section li { color: var(--text-secondary); line-height: 1.7; margin-bottom: 0.6rem; padding-left: 1.3rem; position: relative; }
   .modal-section li::before { content: '→'; position: absolute; left: 0; color: var(--accent-teal); }
+
+  /* ---- print / PDF ---- */
+  .print-only { display: none; }
+  .print-masthead { font-size: 0.82rem; color: var(--text-secondary); padding-bottom: 0.7rem; border-bottom: 1px solid var(--border-subtle); }
+  .print-masthead strong { color: var(--text-primary); font-size: 1rem; }
+  .print-masthead a { color: var(--accent-cyan); }
+  .print-note { margin-bottom: 0.9rem; }
+  .print-note-label { font-family: var(--mono); font-size: 0.78rem; color: var(--accent-teal); margin-bottom: 0.2rem; }
+  .print-note p { color: var(--text-secondary); }
+
+  @page { size: A4; margin: 12mm; }
+  @media print {
+    :root, :root[data-theme] {
+      --ink-dark: #f5f6fa;
+      --ink-lighter: #eceef5;
+      --ink-panel: #ffffff;
+      --ink-border: #dde1ec;
+      --text-primary: #12162b;
+      --text-secondary: #3a425c;
+      --text-muted: #646c88;
+      --accent-cyan: #0a8f92;
+      --accent-purple: #6a4fd6;
+      --accent-gold: #94740a;
+      --accent-teal: #0e8573;
+      --border-subtle: rgba(100, 110, 140, 0.4);
+    }
+    * { -webkit-print-color-adjust: exact; print-color-adjust: exact; transition: none !important; }
+    html { font-size: 13px; }
+    html, body { background: #ffffff; }
+    body { font-size: 13px; }
+    .screen-only, .workspace-header, .notes-panel, .ticket-actions, .modal-close, .file-tab-bar .close, .hero-label, #cases .board-scroll { display: none !important; }
+    .print-only { display: block; }
+    .container { max-width: none; padding: 0; }
+    .hero { padding: 1rem 0 0.4rem; }
+    .hero h1 { background: none; -webkit-text-fill-color: currentColor; color: var(--text-primary); font-size: 2rem; margin-bottom: 0.7rem; }
+    .hero p { font-size: 1rem; max-width: none; }
+    .file-window { margin: 0.9rem 0; overflow: visible; break-inside: avoid; }
+    #cases { break-inside: auto; }
+    .file-tab-bar { border-radius: 10px 10px 0 0; break-after: avoid; }
+    .file-body { padding: 1.2rem; }
+    .section-title, .section-sub { break-after: avoid; }
+    .roadmap-item, .credential-item, .ticket, .modal-content, .print-note { break-inside: avoid; }
+    .roadmap-item { padding-bottom: 1rem; }
+    .roadmap-tag { margin-bottom: 0.3rem; }
+    .roadmap-item .meta { margin-bottom: 0.3rem; }
+
+    .filter-pill { pointer-events: none; }
+    .filter-pill[data-cat="all"], .filter-pill .pill-count { display: none; }
+    .filter-pill, .filter-pill.active { background: transparent; border-color: var(--pill-color); color: var(--pill-color); font-weight: 600; }
+    .tag-chip.chip-hidden { display: inline-flex !important; }
+
+    .modal, .modal.active {
+      display: block !important; position: static; inset: auto; background: transparent;
+      backdrop-filter: none; overflow: visible; padding: 0;
+    }
+    .modal-content { max-width: none; width: auto; padding: 1.2rem 1.4rem; margin: 0 0 0.9rem; background: var(--ink-dark); }
+    .modal h2 { font-size: 1.2rem; margin-bottom: 0.9rem; }
+    .modal-section { margin-bottom: 0.9rem; }
+  }
 </style>
 </head>
 <body>
@@ -373,6 +432,14 @@
 
   <div class="container">
 
+    <div class="print-only print-masthead">
+      <strong>Hiba Kakul</strong> · New Delhi, India ·
+      <a href="mailto:hibakakul@gmail.com">hibakakul@gmail.com</a> ·
+      <a href="https://linkedin.com/in/hibakakul">linkedin.com/in/hibakakul</a> ·
+      <a href="https://github.com/hibakakul-hash">github.com/hibakakul-hash</a> ·
+      <a href="https://hibakakul-hash.github.io/Conjunctions/">hibakakul-hash.github.io/Conjunctions</a>
+    </div>
+
     <section class="hero">
       <div class="hero-label">Platform Product Manager</div>
       <h1>I diagnose bottlenecks. I design platforms. I scale operations.</h1>
@@ -388,7 +455,7 @@
       </div>
       <div class="file-body">
         <div class="section-title">A few quick answers</div>
-        <div class="section-sub">Pick a prompt below.</div>
+        <div class="section-sub screen-only">Pick a prompt below.</div>
         <div class="notes-panel">
           <div class="notes-title">field-notes.sh</div>
           <div class="note-buttons">
@@ -401,6 +468,7 @@
           <div class="note-prompt"><span class="user">hiba@portfolio</span>:~$ notes <span id="noteCmd">--approach</span></div>
           <div class="note-output" id="noteOutput">My approach: diagnose the constraint at platform level (fragmented data, no automation, missing visibility), design the architecture (what can be built?), then drive adoption (how do we make it stick?).</div>
         </div>
+        <div class="print-only" id="printNotes"></div>
       </div>
     </div>
 
@@ -422,6 +490,7 @@
             <a class="primary" href="mailto:hibakakul@gmail.com">✉ Email me</a>
             <a href="https://linkedin.com/in/hibakakul" target="_blank">in/ LinkedIn</a>
             <a href="https://github.com/hibakakul-hash" target="_blank">⎇ GitHub</a>
+            <a class="screen-only" href="Hiba-Kakul-Portfolio.pdf" download="Hiba-Kakul-Portfolio.pdf">⬇ Download PDF</a>
           </div>
           <div class="ticket-stats">
             <div class="stat"><div class="val">250+</div><div class="lbl">Enterprise Partners</div></div>
@@ -445,14 +514,14 @@
         <div class="roadmap">
           <div class="roadmap-item now">
             <div class="roadmap-tag">Now</div>
-            <div class="role">Founder &amp; Platform PM, Sab Link</div>
+            <div class="role">Platform PM and Strategy, Sab Link</div>
             <div class="meta">July 2026 – Present</div>
-            <div class="blurb">Building a 0-to-1 platform connecting 20+ artisan-businesses from marginalized communities to market access and upskilling. Piloted to 20+ active makers with a 2-3x income uplift.</div>
+            <div class="blurb">Building a 0-to-1 platform connecting artisan-businesses from marginalized communities to market access and upskilling. Piloted to 5+ active makers with a 2-3x income uplift.</div>
           </div>
           <div class="roadmap-item now">
             <div class="roadmap-tag">Now</div>
             <div class="role">Platform Lead, Filtrd</div>
-            <div class="meta">2025 – Present</div>
+            <div class="meta">2025 – Present · Part-time</div>
             <div class="blurb">Own backend infrastructure and community engagement architecture for a fintech platform focused on ethical investment education for women, built from market research into a 0-to-1 roadmap.</div>
           </div>
           <div class="roadmap-item">
@@ -498,7 +567,7 @@
       </div>
       <div class="file-body">
         <div class="section-title">Selected product enablements</div>
-        <div class="section-sub">Click a card for the full case study.</div>
+        <div class="section-sub screen-only">Click a card for the full case study.</div>
         <div class="board-scroll">
           <div class="board-card" onclick="openModal(1)">
             <div class="card-id">CASE-01 · Infrastructure</div>
@@ -536,11 +605,87 @@
             <div class="card-id">CASE-05 · Creator Platform</div>
             <div class="tag">Creator Platform</div>
             <h3>Sab Link: Artisan-to-Market Platform</h3>
-            <div class="constraint">20+ artisans from marginalized communities had no unified access to market visibility or direct-to-consumer channels.</div>
-            <div class="chips"><span>20+ Artisans</span><span>Community-Led Growth</span></div>
+            <div class="constraint">Artisans from marginalized communities had no unified access to market visibility or direct-to-consumer channels.</div>
+            <div class="chips"><span>5+ Active Makers</span><span>Community-Led Growth</span></div>
             <div class="open-cta">Open ticket →</div>
           </div>
         </div>
+      <!-- Modals -->
+      <div class="modal" id="modal1">
+        <div class="modal-content">
+          <button class="modal-close" onclick="closeModal(1)">×</button>
+          <h2>Unified Omni-Channel Data Integration</h2>
+          <div class="modal-section"><h4>The Problem</h4><p>Sugar Cosmetics operated across 100+ retail stores with siloed inventory and order data. Real-time visibility was impossible, leading to overselling, stockouts, and fragmented customer experiences.</p></div>
+          <div class="modal-section"><h4>Design and Delivery</h4><p>Assessed existing API capabilities across retail, e-commerce, and POS systems. Designed a webhook-based integration architecture for real-time inventory and order data sync. Coordinated technical requirements directly with the client's product team and validated the design through a staging pilot before go-live.</p></div>
+          <div class="modal-section"><h4>Impact</h4><ul>
+            <li>Scaled to 100+ stores across India with unified real-time inventory visibility</li>
+            <li>Reduced stockouts 35% through data-driven replenishment</li>
+            <li>Eliminated manual reconciliation (80% fewer touchpoints)</li>
+            <li>Freed ops teams for strategic work instead of firefighting</li>
+          </ul></div>
+        </div>
+      </div>
+
+      <div class="modal" id="modal2">
+        <div class="modal-content">
+          <button class="modal-close" onclick="closeModal(2)">×</button>
+          <h2>Amazon B2B Order Integration</h2>
+          <div class="modal-section"><h4>The Problem</h4><p>Manual order reconciliation across 250+ enterprise brands' Amazon B2B channels created operational inefficiency and error risk. No reliable sync existed between Amazon and Unicommerce.</p></div>
+          <div class="modal-section"><h4>Design and Delivery</h4><p>Identified the problem and built the business case. Engaged directly with Amazon's team to scope available integration options. Partnered with engineering and leadership through solution design, recommending a polling-based sync model chosen based on Amazon's webhook limitations at the time.</p></div>
+          <div class="modal-section"><h4>Impact</h4><ul>
+            <li>Eliminated manual reconciliation across 250+ brands</li>
+            <li>Enabled seamless, scaled order processing</li>
+            <li>Reduced operational risk and human error</li>
+            <li>Freed finance and ops teams from routine reconciliation work</li>
+          </ul></div>
+        </div>
+      </div>
+
+      <div class="modal" id="modal3">
+        <div class="modal-content">
+          <button class="modal-close" onclick="closeModal(3)">×</button>
+          <h2>Ajio B2B2C GST Compliance Remediation</h2>
+          <div class="modal-section"><h4>The Problem</h4><p>Ajio's B2B2C model required two separate invoice chains. The existing integration mixed them, producing GST-invalid invoices. A client's CA flagged the mismatches, escalating to a compliance risk across 50+ brands.</p></div>
+          <div class="modal-section"><h4>Design and Delivery</h4><p>Built the business case for remediation. Engaged Ajio's technical team directly to define the corrected invoicing approach. Partnered with engineering and business through the revamp, holding sign-off before rollout. Retrospectively corrected 5,000+ historical invoices with zero operational disruption.</p></div>
+          <div class="modal-section"><h4>Impact</h4><ul>
+            <li>Achieved 100% invoice validity post-launch</li>
+            <li>Retrospectively corrected 5,000+ historical invoices with zero disruption</li>
+            <li>Eliminated manual review, freed finance team</li>
+            <li>Reduced invoice-to-dispatch from 4 hours to 8 minutes</li>
+            <li>Scaled confidently across 50+ brands; zero compliance violations as transaction volume grew 3x</li>
+          </ul></div>
+        </div>
+      </div>
+
+      <div class="modal" id="modal4">
+        <div class="modal-content">
+          <button class="modal-close" onclick="closeModal(4)">×</button>
+          <h2>Filtrd: Ethical Investment Platform</h2>
+          <div class="modal-section"><h4>The Problem</h4><p>Women investors faced barriers: lack of accessible ethical investment education, limited Shariah-compliant options, and no aggregated financial data layer for third-party integration.</p></div>
+          <div class="modal-section"><h4>Design and Delivery</h4><p>Translated market research (women's wealth gaps, Shariah-compliance constraints, investor sentiment) into a 0-to-1 roadmap. Built API layer enabling third-party financial data integration. Designed pricing model and community workshop framework connecting financial literacy to product adoption.</p></div>
+          <div class="modal-section"><h4>Impact</h4><ul>
+            <li>Designed backend infrastructure for scaled financial data integration</li>
+            <li>Built community engagement architecture connecting education to adoption</li>
+            <li>Established framework for workshop-led financial literacy</li>
+            <li>Creating infrastructure for ethical investing at scale</li>
+          </ul></div>
+        </div>
+      </div>
+
+      <div class="modal" id="modal5">
+        <div class="modal-content">
+          <button class="modal-close" onclick="closeModal(5)">×</button>
+          <h2>Sab Link: Artisan-to-Market Platform</h2>
+          <div class="modal-section"><h4>The Problem</h4><p>Artisans from marginalized communities had no unified platform for market access. Skill-sharing channels were fragmented. Artists had no aggregated visibility and faced barriers to direct-to-consumer sales.</p></div>
+          <div class="modal-section"><h4>Design and Delivery</h4><p>Diagnosed the platform-level constraint: artisans needed both community visibility and market access. Designed a two-layer model combining skill-based workshops with a direct-to-consumer marketplace. Built the community layer first (monthly in-person skill-sharing workshops), then layered the digital platform enabling direct transactions and artist portfolios.</p></div>
+          <div class="modal-section"><h4>Impact</h4><ul>
+            <li>Piloted with 5+ active makers, connecting them to market access and visibility</li>
+            <li>Built skill-based entrepreneurship framework for scaling</li>
+            <li>Created community-led model reducing reliance on single founder</li>
+            <li>Established sustainable pathway for minority group economic growth</li>
+          </ul></div>
+        </div>
+      </div>
       </div>
     </div>
 
@@ -553,7 +698,7 @@
       </div>
       <div class="file-body">
         <div class="section-title">Capability matrix</div>
-        <div class="section-sub">Click a category to filter. Dot color shows the group.</div>
+        <div class="section-sub"><span class="screen-only">Click a category to filter. </span>Dot color shows the group.</div>
         <div class="filter-bar">
           <button class="filter-pill active" data-cat="all" onclick="filterCloud(this)">All <span class="pill-count">26</span></button>
           <button class="filter-pill" data-cat="strategy" style="--pill-color: var(--accent-cyan);" onclick="filterCloud(this)">Platform Strategy <span class="pill-count">5</span></button>
@@ -638,7 +783,7 @@
       </div>
       <div class="file-body">
         <div class="section-title">Brands I've worked with</div>
-        <div class="section-sub">47 partners across marketplaces, direct brands, and logistics. Click a category to filter.</div>
+        <div class="section-sub">47 partners across marketplaces, direct brands, and logistics.<span class="screen-only"> Click a category to filter.</span></div>
         <div class="ticket-stats mini-stats">
           <div class="stat"><div class="val">16</div><div class="lbl">Marketplaces &amp; D2C</div></div>
           <div class="stat"><div class="val">20</div><div class="lbl">Direct Brands</div></div>
@@ -724,7 +869,7 @@
             <h4>Projects</h4>
             <ul>
               <li><a href="https://sab-link.vercel.app" target="_blank">Sab Link</a></li>
-              <li><a href="https://filtrd.io" target="_blank">Filtrd</a></li>
+              <li><a href="https://hibakakul-hash.github.io/filtrd-halal-finance-screener/" target="_blank">Filtrd</a></li>
             </ul>
           </div>
         </div>
@@ -732,83 +877,6 @@
       </div>
     </div>
 
-  </div>
-
-  <!-- Modals -->
-  <div class="modal" id="modal1">
-    <div class="modal-content">
-      <button class="modal-close" onclick="closeModal(1)">×</button>
-      <h2>Unified Omni-Channel Data Integration</h2>
-      <div class="modal-section"><h4>The Problem</h4><p>Sugar Cosmetics operated across 100+ retail stores with siloed inventory and order data. Real-time visibility was impossible, leading to overselling, stockouts, and fragmented customer experiences.</p></div>
-      <div class="modal-section"><h4>Design and Delivery</h4><p>Assessed existing API capabilities across retail, e-commerce, and POS systems. Designed a webhook-based integration architecture for real-time inventory and order data sync. Coordinated technical requirements directly with the client's product team and validated the design through a staging pilot before go-live.</p></div>
-      <div class="modal-section"><h4>Impact</h4><ul>
-        <li>Scaled to 100+ stores across India with unified real-time inventory visibility</li>
-        <li>Reduced stockouts 35% through data-driven replenishment</li>
-        <li>Eliminated manual reconciliation (80% fewer touchpoints)</li>
-        <li>Freed ops teams for strategic work instead of firefighting</li>
-      </ul></div>
-    </div>
-  </div>
-
-  <div class="modal" id="modal2">
-    <div class="modal-content">
-      <button class="modal-close" onclick="closeModal(2)">×</button>
-      <h2>Amazon B2B Order Integration</h2>
-      <div class="modal-section"><h4>The Problem</h4><p>Manual order reconciliation across 250+ enterprise brands' Amazon B2B channels created operational inefficiency and error risk. No reliable sync existed between Amazon and Unicommerce.</p></div>
-      <div class="modal-section"><h4>Design and Delivery</h4><p>Identified the problem and built the business case. Engaged directly with Amazon's team to scope available integration options. Partnered with engineering and leadership through solution design, recommending a polling-based sync model chosen based on Amazon's webhook limitations at the time.</p></div>
-      <div class="modal-section"><h4>Impact</h4><ul>
-        <li>Eliminated manual reconciliation across 250+ brands</li>
-        <li>Enabled seamless, scaled order processing</li>
-        <li>Reduced operational risk and human error</li>
-        <li>Freed finance and ops teams from routine reconciliation work</li>
-      </ul></div>
-    </div>
-  </div>
-
-  <div class="modal" id="modal3">
-    <div class="modal-content">
-      <button class="modal-close" onclick="closeModal(3)">×</button>
-      <h2>Ajio B2B2C GST Compliance Remediation</h2>
-      <div class="modal-section"><h4>The Problem</h4><p>Ajio's B2B2C model required two separate invoice chains. The existing integration mixed them, producing GST-invalid invoices. A client's CA flagged the mismatches, escalating to a compliance risk across 50+ brands.</p></div>
-      <div class="modal-section"><h4>Design and Delivery</h4><p>Built the business case for remediation. Engaged Ajio's technical team directly to define the corrected invoicing approach. Partnered with engineering and business through the revamp, holding sign-off before rollout. Retrospectively corrected 5,000+ historical invoices with zero operational disruption.</p></div>
-      <div class="modal-section"><h4>Impact</h4><ul>
-        <li>Achieved 100% invoice validity post-launch</li>
-        <li>Retrospectively corrected 5,000+ historical invoices with zero disruption</li>
-        <li>Eliminated manual review, freed finance team</li>
-        <li>Reduced invoice-to-dispatch from 4 hours to 8 minutes</li>
-        <li>Scaled confidently across 50+ brands; zero compliance violations as transaction volume grew 3x</li>
-      </ul></div>
-    </div>
-  </div>
-
-  <div class="modal" id="modal4">
-    <div class="modal-content">
-      <button class="modal-close" onclick="closeModal(4)">×</button>
-      <h2>Filtrd: Ethical Investment Platform</h2>
-      <div class="modal-section"><h4>The Problem</h4><p>Women investors faced barriers: lack of accessible ethical investment education, limited Shariah-compliant options, and no aggregated financial data layer for third-party integration.</p></div>
-      <div class="modal-section"><h4>Design and Delivery</h4><p>Translated market research (women's wealth gaps, Shariah-compliance constraints, investor sentiment) into a 0-to-1 roadmap. Built API layer enabling third-party financial data integration. Designed pricing model and community workshop framework connecting financial literacy to product adoption.</p></div>
-      <div class="modal-section"><h4>Impact</h4><ul>
-        <li>Designed backend infrastructure for scaled financial data integration</li>
-        <li>Built community engagement architecture connecting education to adoption</li>
-        <li>Established framework for workshop-led financial literacy</li>
-        <li>Creating infrastructure for ethical investing at scale</li>
-      </ul></div>
-    </div>
-  </div>
-
-  <div class="modal" id="modal5">
-    <div class="modal-content">
-      <button class="modal-close" onclick="closeModal(5)">×</button>
-      <h2>Sab Link: Artisan-to-Market Platform</h2>
-      <div class="modal-section"><h4>The Problem</h4><p>20+ artisans from marginalized communities had no unified platform for market access. Skill-sharing channels were fragmented. Artists had no aggregated visibility and faced barriers to direct-to-consumer sales.</p></div>
-      <div class="modal-section"><h4>Design and Delivery</h4><p>Diagnosed the platform-level constraint: artisans needed both community visibility and market access. Designed a two-layer model combining skill-based workshops with a direct-to-consumer marketplace. Built the community layer first (monthly in-person skill-sharing workshops), then layered the digital platform enabling direct transactions and artist portfolios.</p></div>
-      <div class="modal-section"><h4>Impact</h4><ul>
-        <li>Connected 20+ artisan-businesses to market access and visibility</li>
-        <li>Built skill-based entrepreneurship framework for scaling</li>
-        <li>Created community-led model reducing reliance on single founder</li>
-        <li>Established sustainable pathway for minority group economic growth</li>
-      </ul></div>
-    </div>
   </div>
 
   <script>
@@ -870,6 +938,19 @@
     });
 
     window.addEventListener('DOMContentLoaded', () => {
+      const printNotes = document.getElementById('printNotes');
+      Object.keys(notes).forEach(key => {
+        const wrap = document.createElement('div');
+        wrap.className = 'print-note';
+        const label = document.createElement('div');
+        label.className = 'print-note-label';
+        label.textContent = '--' + noteCommands[key];
+        const text = document.createElement('p');
+        text.textContent = notes[key];
+        wrap.append(label, text);
+        printNotes.appendChild(wrap);
+      });
+
       const savedTheme = localStorage.getItem('theme');
       if (savedTheme === 'dark') {
         document.querySelector('.theme-toggle').classList.add('dark');
