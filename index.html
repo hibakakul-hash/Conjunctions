@@ -334,10 +334,11 @@
     display: none; position: fixed; inset: 0; background: rgba(10,14,39,0.8);
     backdrop-filter: blur(4px); z-index: 1000; overflow-y: auto;
   }
-  .modal.active { display: flex; align-items: center; justify-content: center; padding: 2rem 1rem; }
+  .modal.active { display: flex; padding: 2rem 1rem; }
   .modal-content {
     background: var(--ink-panel); border: 1px solid var(--border-subtle);
     border-radius: 12px; padding: 2.5rem; max-width: 680px; width: 100%; position: relative;
+    margin: auto;
   }
   .modal-close {
     position: absolute; top: 1.2rem; right: 1.2rem; background: none; border: none;
